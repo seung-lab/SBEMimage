@@ -43,18 +43,20 @@ def main():
             and platform.release() in ['7', '10']):
         print('Error: This version of SBEMimage requires Windows 7 or 10. '
               'Program aborted.\n')
-        os.system('cmd /k')
-        sys.exit()
+        # os.system('cmd /k')
+        # sys.exit()
 
     if platform.release() == '10':
         QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
     SBEMimage = QApplication(sys.argv)
-    app_id = 'SBEMimage ' + VERSION
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+    if platform.system() == 'Windows':
+        app_id = 'SBEMimage ' + VERSION
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
     colorama.init()
-    os.system('cls')
-    os.system('title SBEMimage - Console')
+    if platform.system() == 'Windows':
+        os.system('cls')
+        os.system('title SBEMimage - Console')
     print('***********************************\n'
           '     SBEMimage\n'
           '     Version %s\n'
@@ -63,8 +65,8 @@ def main():
     configuration_loaded = False
     default_configuration = False
 
-    if (os.path.isfile('..\\cfg\\default.ini')
-            and os.path.isfile('..\\cfg\\system.cfg')):
+    if (os.path.isfile(os.path.join('..','cfg','default.ini'))
+            and os.path.isfile(os.path.join('..','cfg','system.cfg'))):
         # Ask user to select .ini file:
         startup_dialog = ConfigDlg(VERSION)
         startup_dialog.exec_()
@@ -94,10 +96,10 @@ def main():
                 print('Loading system settings file %s ...'
                       % sysconfig_file, end='')
                 sysconfig = ConfigParser()
-                with open('..\\cfg\\' + sysconfig_file, 'r') as file:
+                with open(os.path.join('..','cfg', sysconfig_file), 'r') as file:
                     sysconfig.read_file(file)
                 configuration_loaded = True
-                print(' Done.\n')
+                print(' Done.\n')y
             except Exception as e:
                 configuration_loaded = False
                 print('\nError while loading configuration! Program aborted.\n Exception:', str(e))
@@ -137,8 +139,8 @@ def main():
                 print('Configuration loaded and checked: ' + ch_str + '\n')
             # Remove status file. It will be recreated when program terminates
             # normally.
-            if os.path.isfile('..\\cfg\\status.dat'):
-                os.remove('..\\cfg\\status.dat')
+            if os.path.isfile(os.path.join('..','cfg','status.dat')):
+                os.remove(os.path.join('..','cfg','status.dat'))
             print('Initializing SBEMimage. Please wait...\n')
             # Launch Main Controls. Viewport is launched from Main Controls.
             SBEMimage_main_window = MainControls(config,

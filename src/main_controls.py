@@ -160,34 +160,34 @@ class MainControls(QMainWindow):
 
     def load_gui(self):
         """Load and set up the GUI."""
-        loadUi('..\\gui\\main_window.ui', self)
+        loadUi(os.path.join('..','gui','main_window.ui'), self)
         self.setWindowTitle('SBEMimage - Main Controls')
         app_icon = QIcon()
-        app_icon.addFile('..\\img\\icon_16px.ico', QSize(16, 16))
-        app_icon.addFile('..\\img\\icon_48px.ico', QSize(48, 48))
+        app_icon.addFile(os.path.join('..','img','icon_16px.ico'), QSize(16, 16))
+        app_icon.addFile(os.path.join('..','img','icon_48px.ico'), QSize(48, 48))
         self.setWindowIcon(app_icon)
         self.setFixedSize(self.size())
         self.move(1120, 20)
         self.hide() # hide window until fully initialized
         # Pushbuttons
         self.pushButton_SEMSettings.clicked.connect(self.open_sem_dlg)
-        self.pushButton_SEMSettings.setIcon(QIcon('..\\img\\settings.png'))
+        self.pushButton_SEMSettings.setIcon(QIcon(os.path.join('..','img','settings.png')))
         self.pushButton_SEMSettings.setIconSize(QSize(16, 16))
         self.pushButton_microtomeSettings.clicked.connect(
             self.open_microtome_dlg)
         self.pushButton_microtomeSettings.setIcon(
-            QIcon('..\\img\\settings.png'))
+            QIcon(os.path.join('..','img','settings.png')))
         self.pushButton_microtomeSettings.setIconSize(QSize(16, 16))
         self.pushButton_gridSettings.clicked.connect(
             lambda: self.open_grid_dlg(self.current_grid))
-        self.pushButton_gridSettings.setIcon(QIcon('..\\img\\settings.png'))
+        self.pushButton_gridSettings.setIcon(QIcon(os.path.join('..','img','settings.png')))
         self.pushButton_gridSettings.setIconSize(QSize(16, 16))
-        self.pushButton_OVSettings.setIcon(QIcon('..\\img\\settings.png'))
+        self.pushButton_OVSettings.setIcon(QIcon(os.path.join('..','img','settings.png')))
         self.pushButton_OVSettings.setIconSize(QSize(16, 16))
         self.pushButton_OVSettings.clicked.connect(self.open_ov_dlg)
         self.pushButton_acqSettings.clicked.connect(
             self.open_acq_settings_dlg)
-        self.pushButton_acqSettings.setIcon(QIcon('..\\img\\settings.png'))
+        self.pushButton_acqSettings.setIcon(QIcon(os.path.join('..','img','settings.png')))
         self.pushButton_acqSettings.setIconSize(QSize(16, 16))
         # Command buttons
         self.pushButton_doApproach.clicked.connect(self.open_approach_dlg)
@@ -390,7 +390,7 @@ class MainControls(QMainWindow):
         self.statusbar_msg = ''
 
         # If workspace does not exist, create directories:
-        workspace_dir = self.cfg['acq']['base_dir'] + '\\workspace'
+        workspace_dir = os.path.join(self.cfg['acq']['base_dir'], 'workspace')
         if not os.path.exists(workspace_dir):
             self.try_to_create_directory(workspace_dir)
 
@@ -992,11 +992,11 @@ class MainControls(QMainWindow):
             self.gm.save_wd_stig_data_to_cfg()
             self.cfg_file = dialog.get_file_name()
             # Write all settings to disk
-            file = open('..\\cfg\\' + self.cfg_file, 'w')
+            file = open(os.path.join('..','cfg',self.cfg_file), 'w')
             self.cfg.write(file)
             file.close()
             # also save system settings:
-            file = open('..\\cfg\\' + self.cfg['sys']['sys_config_file'], 'w')
+            file = open(os.path.join('..','cfg',self.cfg['sys']['sys_config_file']), 'w')
             self.syscfg.write(file)
             file.close()
             self.add_to_log('CTRL: Settings saved to disk.')
@@ -1072,7 +1072,7 @@ class MainControls(QMainWindow):
         self.viewport.mv_draw()
 
     def open_import_image_dlg(self):
-        target_dir = self.cfg['acq']['base_dir'] + '\\overviews\\imported'
+        target_dir = os.path.join(self.cfg['acq']['base_dir'], 'overviews', 'imported')
         if not os.path.exists(target_dir):
             self.try_to_create_directory(target_dir)
         dialog = ImportImageDlg(self.ovm, self.cs, target_dir)
@@ -1468,11 +1468,10 @@ class MainControls(QMainWindow):
     def add_tile_folder(self):
         grid = self.viewport.mv_get_selected_grid()
         tile = self.viewport.mv_get_selected_tile()
-        tile_folder = (self.cfg['acq']['base_dir']
-                      + '\\tiles\\g'
-                      + str(grid).zfill(utils.GRID_DIGITS)
-                      + '\\t'
-                      + str(tile).zfill(utils.TILE_DIGITS))
+        tile_folder = os.path.join(self.cfg['acq']['base_dir'],
+                      'tiles',
+                      'g' + str(grid).zfill(utils.GRID_DIGITS),
+                      't' + str(tile).zfill(utils.TILE_DIGITS))
         if not os.path.exists(tile_folder):
             self.try_to_create_directory(tile_folder)
         if self.cfg['sys']['use_mirror_drive'] == 'True':
@@ -1736,8 +1735,8 @@ class MainControls(QMainWindow):
             'File name (.png will be added; File will be saved in '
             'current base directory): ', QLineEdit.Normal, 'current_viewport')
         if user_edit:
-            self.viewport.grab_viewport_screenshot(
-                self.cfg['acq']['base_dir'] + '\\' + file_name + '.png')
+            self.viewport.grab_viewport_screenshot(os.path.join(
+                self.cfg['acq']['base_dir'], file_name + '.png'))
             self.add_to_log('CTRL: Saved current viewport to disk.')
 
 # ===================== Test functions in third tab ===========================
@@ -1873,8 +1872,8 @@ class MainControls(QMainWindow):
     def debris_detection_test(self):
         # Uses overview images t1.tif and t2.tif in current base directory
         # to run the debris detection in the current detection area.
-        test_image1 = self.cfg['acq']['base_dir'] + '\\t1.tif'
-        test_image2 = self.cfg['acq']['base_dir'] + '\\t2.tif'
+        test_image1 = os.path.join(self.cfg['acq']['base_dir'], 't1.tif')
+        test_image2 = os.path.join(self.cfg['acq']['base_dir'], 't2.tif')
 
         if os.path.isfile(test_image1) and os.path.isfile(test_image2):
             self.img_inspector.process_ov(test_image1, 0, 0)
@@ -2090,12 +2089,11 @@ class MainControls(QMainWindow):
             # Save current WD/STIG data to config:
             self.gm.save_wd_stig_data_to_cfg()
             # Write config to disk:
-            cfgfile = open('..\\cfg\\' + self.cfg_file, 'w')
+            cfgfile = open(os.path.join('..','cfg',self.cfg_file), 'w')
             self.cfg.write(cfgfile)
             cfgfile.close()
             # Also save system settings:
-            syscfgfile = open('..\\cfg\\'
-                              + self.cfg['sys']['sys_config_file'], 'w')
+            syscfgfile = open(os.path.join('..','cfg',self.cfg['sys']['sys_config_file']), 'w')
             self.syscfg.write(syscfgfile)
             syscfgfile.close()
             self.add_to_log('CTRL: Settings saved to disk.')
@@ -2175,7 +2173,7 @@ class MainControls(QMainWindow):
                 sleep(1)
                 # Recreate status.dat to indicate that program was closed
                 # normally and didn't crash:
-                status_file = open('..\\cfg\\status.dat', 'w+')
+                status_file = open(os.path.join('..','cfg','status.dat'), 'w+')
                 status_file.write(self.cfg_file)
                 status_file.close()
                 print('Closed by user.\n')
