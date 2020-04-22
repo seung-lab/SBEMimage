@@ -102,8 +102,8 @@ class Viewport(QWidget):
         self.setMouseTracking(True)
 
     def load_gui(self):
-        loadUi('..\\gui\\viewport.ui', self)
-        self.setWindowIcon(QIcon('..\\img\\icon_16px.ico'))
+        loadUi(os.path.join('..','gui','viewport.ui'), self)
+        self.setWindowIcon(QIcon(os.path.join('..','img','icon_16px.ico')))
         self.setWindowTitle('SBEMimage - Viewport')
         # Display current settings:
         self.setFixedSize(self.size())
@@ -158,19 +158,19 @@ class Viewport(QWidget):
     def update_measure_buttons(self):
         if self.mv_measure_active:
             self.pushButton_measureMosaic.setIcon(
-                QIcon('..\\img\\measure-active.png'))
+                QIcon(os.path.join('..','img','measure-active.png')))
             self.pushButton_measureMosaic.setIconSize(QSize(16, 16))
         else:
             self.pushButton_measureMosaic.setIcon(
-                QIcon('..\\img\\measure.png'))
+                QIcon(os.path.join('..','img','measure.png')))
             self.pushButton_measureMosaic.setIconSize(QSize(16, 16))
         if self.sv_measure_active:
             self.pushButton_measureSlice.setIcon(
-                QIcon('..\\img\\measure-active.png'))
+                QIcon(os.path.join('..','img','measure-active.png')))
             self.pushButton_measureSlice.setIconSize(QSize(16, 16))
         else:
             self.pushButton_measureSlice.setIcon(
-                QIcon('..\\img\\measure.png'))
+                QIcon(os.path.join('..','img','measure.png')))
             self.pushButton_measureSlice.setIconSize(QSize(16, 16))
 
     def grab_viewport_screenshot(self, save_path_filename):
@@ -584,7 +584,7 @@ class Viewport(QWidget):
         # Canvas:
         self.mv_canvas = QPixmap(self.VIEWER_WIDTH, self.VIEWER_HEIGHT)
         # Help panel:
-        self.mv_help_panel_img = QPixmap('..\\img\\help-viewport.png')
+        self.mv_help_panel_img = QPixmap(os.path.join('..','img','help-viewport.png'))
         # QPainter:
         self.mv_qp = QPainter()
 
@@ -598,7 +598,7 @@ class Viewport(QWidget):
         self.pushButton_acquireStubOV.clicked.connect(
             self.mv_acquire_stub_overview)
         self.pushButton_measureMosaic.clicked.connect(self.mv_toggle_measure)
-        self.pushButton_measureMosaic.setIcon(QIcon('..\\img\\measure.png'))
+        self.pushButton_measureMosaic.setIcon(QIcon(os.path.join('..','img','measure.png')))
         self.pushButton_measureMosaic.setIconSize(QSize(16, 16))
         self.pushButton_helpViewport.clicked.connect(self.mv_toggle_help_panel)
         self.pushButton_helpSliceViewer.clicked.connect(
@@ -2133,12 +2133,12 @@ class Viewport(QWidget):
         self.sv_measure_active = False
         self.sv_canvas = QPixmap(self.VIEWER_WIDTH, self.VIEWER_HEIGHT)
         # Help panel:
-        self.sv_help_panel_img = QPixmap('..\\img\\help-sliceviewer.png')
+        self.sv_help_panel_img = QPixmap(os.path.join('..','img','help-sliceviewer.png'))
         self.sv_qp = QPainter()
 
         self.pushButton_reloadSV.clicked.connect(self.sv_load_slices)
         self.pushButton_measureSlice.clicked.connect(self.sv_toggle_measure)
-        self.pushButton_measureSlice.setIcon(QIcon('..\\img\\measure.png'))
+        self.pushButton_measureSlice.setIcon(QIcon(os.path.join('..','img','measure.png')))
         self.pushButton_measureSlice.setIconSize(QSize(16, 16))
         self.pushButton_sliceBWD.clicked.connect(self.sv_slice_bwd)
         self.pushButton_sliceFWD.clicked.connect(self.sv_slice_fwd)

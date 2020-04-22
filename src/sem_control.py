@@ -18,9 +18,20 @@
 from time import sleep
 
 import json
-import pythoncom
-import win32com.client   # required to access CZEMApi.ocx (Carl Zeiss EM API)
-from win32com.client import VARIANT  # necessary for API function calls
+
+import platform
+
+if not (platform.system() == 'Windows'):
+    import mock
+    pythoncom = mock.Mock()
+    win32com = mock.Mock()
+    client = mock.Mock()
+    VARIANT = mock.Mock()
+
+else:
+    import pythoncom
+    import win32com.client   # required to access CZEMApi.ocx (Carl Zeiss EM API)
+    from win32com.client import VARIANT  # necessary for API function calls
 
 class SEM:
     """Base class for remote SEM control. Implements minimum parameter handling.

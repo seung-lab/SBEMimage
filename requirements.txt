@@ -4,7 +4,6 @@ validators
 validate_email
 Pillow
 requests
-pywin32
 pyserial
 scipy
 numpy
@@ -14,3 +13,4 @@ imreg_dft
 imageio
 pyyaml
 psutil
+mock
